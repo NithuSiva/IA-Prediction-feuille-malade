@@ -1,45 +1,40 @@
 # Objectif
 
-Ce projet innovant a pour but de faire un algorithmes permettant une estimation de l’age d’un individu sur une photo à l’aide de l’Intelligence Artificielle.
+L'objectif de mon projet est de déterminer si une feuille malade permet de prédire si la plante risque de mourir ou si elle produira des fruits de mauvaise qualité. D'après mes recherches, une plante présentant des taches, des trous ou des couleurs anormales indique une maladie et un risque de mort imminent. En ce qui concerne les fruits, une plante malade produit souvent des fruits de mauvaise qualité, voire non comestibles. Ainsi, en prédisant l'état d'une plante malade, on peut limiter sa propagation et, idéalement, la guérir. L'objectif de ce dataset est d'analyser les feuilles d'une plante afin de prédire leur état, ce qui pourrait être utile dans un potager, comme dans le cas de mon père qui cultive des tomates. Cela me permettrait de reconnaître si mes feuilles de tomate malades risquent de donner des tomates de mauvaise qualité.
 
 # Dataset
 
-Dans un premier temps, après avoir récupérée notre dataset depuis kaggle sous format zip, nous remarquons qu’il est organisé par âge, c’est-à-dire qu' un dossier correspond à un âge allant de 1 ans à 100 ans.
-
-Nous avons constaté un déséquilibre dans la répartition des classes, certaines contenant significativement plus d'images que d'autres.
-
-![nombre_image_dossier](https://github.com/user-attachments/assets/26878dee-2655-408a-9d4a-5ae039c4967b)
-
-Avoir plus de 100 classes s'est avéré problématique, car cela complique l'entraînement de notre modèle,  Dans notre cas, l'objectif étant de prédire si un individu est majeur, ainsi seulement 2 classes suffisent mais avoir 6 classes permet de mieux distinguer les âges proches de 18 ans, réduisant ainsi les erreurs de classification aux limites de la majorité. Nous avons par la suite réorganisé les données afin de réduire le nombre de classes, les divisant ainsi en six catégories distinctes.
-
-
-![dataset_trier](https://github.com/user-attachments/assets/c345a584-64b9-44de-83fb-8eedc5f1bfe1)
+Dans un premier temps, après avoir récupérée notre dataset depuis kaggle sous format zip. Le dataset classe 17 plantes malades ainsi que 10 plantes en bonne santé. Il est constitué de deux dossiers : un dossier 'train' contenant 2516 images et un dossier 'test' également composé de 2516 images.
 
 # Entraînement du modèle
 
-Nous avons utilisé un réseau de neurones convolutionnels (CNN), le CNN est permet de faire de la classification d’images, en effet il est un algorithme puissant permettant de faire du deep learning. 
+Nous avons utilisé un CNN pour la prédiction d’images, car il permet de traiter les images en tant que données pour la classification. Pour cela, nous avons utilisé TensorFlow et Keras : TensorFlow est une bibliothèque d'apprentissage automatique, tandis que Keras est une interface de haut niveau qui facilite la création de modèles d'apprentissage profond. Nous avons également utilisé Google Colab pour exécuter le notebook, car il est plus efficace que nos machines et nous permet d'entraîner nos modèles plus rapidement.
 
 ## Architecture du CNN
 ```python
 model = Sequential([
-    layers.Conv2D(64, (3, 3), activation='relu', input_shape=(img_height, img_width, 3)),
-    layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(128, (3, 3), activation='relu'),
-    layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(256, (3, 3), activation='relu'),
-    layers.MaxPooling2D((2, 2)),
-    layers.Flatten(),
-    layers.Dense(512, activation='relu'),
-    layers.Dropout(0.5),
-    layers.Dense(num_classes)
+  layers.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
+
+  layers.Conv2D(16, 3, padding='same', activation='relu'),
+  layers.MaxPooling2D(),
+
+  layers.Conv2D(32, 3, padding='same', activation='relu'),
+  layers.MaxPooling2D(),
+
+  layers.Conv2D(64, 3, padding='same', activation='relu'),
+  layers.MaxPooling2D(),
+
+  layers.Flatten(),
+  layers.Dense(128, activation='relu'),
+  layers.Dense(num_classes)
 ])
 ```
 
 ## Précision
 
-Nous avons varié les hyperparamètres, tels que le batch size, la rotation de l’image, la taille de l’image et le nombre de filtres, et réalisé plusieurs tentatives d’entraînements d'une durée variant de 5 à 8 heures. Le meilleur résultat obtenu est une précision de 0.59 en entraînement et en validation. Nous avons effectué ces entraînements sur notre machine locale, car l'utilisation du TPU de Google Colab est limitée à 4 heures.
+
 
 ## Résultat 
-Nous avons obtenu 6 prédictions correctes sur 9, et avec une dizaine d'essais, nous atteignons environ 5,2 prédictions correctes sur 9, ce qui correspond à la précision de notre modèle.
-![prediction_2](https://github.com/user-attachments/assets/fd5af7e7-9b3e-4369-b3a4-19339ed5e5e5)
+
+
 
